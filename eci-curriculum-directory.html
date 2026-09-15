@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Curriculum Resource Directory — ECI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Libre+Franklin:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --charcoal: #262A2E;
+    --charcoal-soft: #454A50;
+    --maple: #A6192E;
+    --maple-deep: #7E1223;
+    --gold: #B0813C;
+    --paper: #F5F2EC;
+    --paper-raised: #FCFAF6;
+    --ink: #262A2E;
+    --ink-muted: #63666B;
+    --rule: #DED8C9;
+    --rule-strong: #C9C1AC;
+    --chip-bg: #FCFAF6;
+    --focus: #2B6CB0;
+  }
+  :root:not([data-theme="light"]){
+    @media (prefers-color-scheme: dark){
+      --charcoal: #EDEAE3;
+      --charcoal-soft: #C7C2B8;
+      --maple: #E1546A;
+      --maple-deep: #F0899A;
+      --gold: #D9A25E;
+      --paper: #1B1D1F;
+      --paper-raised: #242628;
+      --ink: #EDEAE3;
+      --ink-muted: #9C9891;
+      --rule: #3A3C3D;
+      --rule-strong: #4B4D4E;
+      --chip-bg: #242628;
+    }
+  }
+  :root[data-theme="dark"]{
+    --charcoal: #EDEAE3;
+    --charcoal-soft: #C7C2B8;
+    --maple: #E1546A;
+    --maple-deep: #F0899A;
+    --gold: #D9A25E;
+    --paper: #1B1D1F;
+    --paper-raised: #242628;
+    --ink: #EDEAE3;
+    --ink-muted: #9C9891;
+    --rule: #3A3C3D;
+    --rule-strong: #4B4D4E;
+    --chip-bg: #242628;
+  }
+
+  *{ box-sizing: border-box; }
+  html, body{ margin:0; padding:0; }
+  body{
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Libre Franklin', system-ui, sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+  a{ color: inherit; }
+
+  /* ---------- header ---------- */
+  header{
+    border-bottom: 1px solid var(--rule);
+    padding: 22px clamp(16px, 4vw, 40px) 18px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: flex-end;
+    justify-content: space-between;
+    background: var(--paper);
+    position: sticky;
+    top: 0;
+    z-index: 20;
+  }
+  .brand-block{ min-width: 240px; }
+  .eyebrow{
+    font-size: 12.5px;
+    color: var(--ink-muted);
+    letter-spacing: 0.01em;
+    margin: 0 0 4px;
+  }
+  h1{
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: clamp(24px, 3.4vw, 32px);
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+  .header-controls{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .search-wrap{
+    position: relative;
+  }
+  #search{
+    font-family: inherit;
+    font-size: 14px;
+    padding: 9px 14px 9px 34px;
+    width: 260px;
+    max-width: 60vw;
+    border: 1px solid var(--rule-strong);
+    border-radius: 3px;
+    background: var(--paper-raised);
+    color: var(--ink);
+  }
+  #search:focus-visible{ outline: 2px solid var(--focus); outline-offset: 1px; }
+  .search-wrap svg{
+    position: absolute;
+    left: 11px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 14px;
+    height: 14px;
+    stroke: var(--ink-muted);
+    pointer-events: none;
+  }
+  .lang-toggle{
+    display: flex;
+    border: 1px solid var(--rule-strong);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .lang-toggle button{
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 13px;
+    background: var(--paper-raised);
+    color: var(--ink-muted);
+    border: none;
+    cursor: pointer;
+  }
+  .lang-toggle button + button{ border-left: 1px solid var(--rule-strong); }
+  .lang-toggle button[aria-pressed="true"]{
+    background: var(--maple);
+    color: #FCFAF6;
+  }
+  .lang-toggle button:focus-visible{ outline: 2px solid var(--focus); outline-offset: -2px; }
+
+  /* ---------- layout ---------- */
+  .layout{
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+  nav.grade-rail{
+    border-right: 1px solid var(--rule);
+    padding: 22px 10px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    position: sticky;
+    top: 79px;
+    align-self: start;
+    max-height: calc(100vh - 79px);
+    overflow-y: auto;
+  }
+  nav.grade-rail button{
+    font-family: inherit;
+    text-align: left;
+    background: none;
+    border: none;
+    border-left: 3px solid transparent;
+    padding: 9px 12px;
+    font-size: 14px;
+    color: var(--ink-muted);
+    cursor: pointer;
+    border-radius: 0 3px 3px 0;
+  }
+  nav.grade-rail button:hover{ background: var(--paper-raised); color: var(--ink); }
+  nav.grade-rail button[aria-current="true"]{
+    border-left-color: var(--maple);
+    color: var(--ink);
+    font-weight: 600;
+    background: var(--paper-raised);
+  }
+  nav.grade-rail button:focus-visible{ outline: 2px solid var(--focus); outline-offset: -2px; }
+
+  main{
+    padding: 30px clamp(16px, 4vw, 40px) 80px;
+    min-width: 0;
+  }
+
+  .mode-label{
+    font-size: 12.5px;
+    color: var(--ink-muted);
+    margin: 0 0 22px;
+  }
+  .mode-label b{ color: var(--ink); font-weight: 600; }
+
+  h2.grade-heading{
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 22px;
+    margin: 0 0 22px;
+  }
+
+  section.subject{
+    border-top: 1px solid var(--rule);
+    padding: 20px 0 6px;
+  }
+  section.subject:first-of-type{ border-top: none; padding-top: 0; }
+  h3.subject-name{
+    font-family: 'Fraunces', serif;
+    font-size: 16.5px;
+    font-weight: 600;
+    color: var(--maple-deep);
+    margin: 0 0 14px;
+  }
+  h3.subject-name .grade-tag{
+    font-family: 'Libre Franklin', sans-serif;
+    font-weight: 500;
+    font-size: 12px;
+    color: var(--ink-muted);
+    margin-left: 8px;
+  }
+
+  article.topic{
+    padding-left: 14px;
+    border-left: 2px solid var(--rule);
+    margin-bottom: 18px;
+  }
+  article.topic:last-child{ margin-bottom: 4px; }
+  p.topic-title{
+    margin: 0 0 9px;
+    font-size: 14.5px;
+    color: var(--ink);
+  }
+  ul.link-list{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+  }
+  ul.link-list a{
+    display: inline-block;
+    font-size: 12.5px;
+    text-decoration: none;
+    padding: 5px 10px;
+    border: 1px solid var(--rule-strong);
+    border-radius: 3px;
+    background: var(--chip-bg);
+    color: var(--charcoal-soft);
+  }
+  ul.link-list a:hover{
+    background: var(--charcoal);
+    color: var(--paper);
+    border-color: var(--charcoal);
+  }
+  ul.link-list a:focus-visible{ outline: 2px solid var(--focus); outline-offset: 1px; }
+
+  .empty-state{
+    padding: 40px 0;
+    color: var(--ink-muted);
+    font-size: 14.5px;
+    max-width: 46ch;
+  }
+  .empty-state b{ color: var(--ink); }
+
+  @media (max-width: 760px){
+    .layout{ display: block; }
+    nav.grade-rail{
+      position: static;
+      flex-direction: row;
+      overflow-x: auto;
+      max-height: none;
+      border-right: none;
+      border-bottom: 1px solid var(--rule);
+      padding: 12px clamp(16px,4vw,40px);
+      gap: 4px;
+    }
+    nav.grade-rail button{
+      white-space: nowrap;
+      border-left: none;
+      border-bottom: 3px solid transparent;
+      border-radius: 3px 3px 0 0;
+    }
+    nav.grade-rail button[aria-current="true"]{
+      border-left-color: transparent;
+      border-bottom-color: var(--maple);
+    }
+    #search{ width: 100%; max-width: none; }
+    header{ align-items: stretch; }
+    .header-controls{ justify-content: space-between; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand-block">
+    <p class="eyebrow" id="eyebrow">École Canadienne Internationale de Paris</p>
+    <h1 id="pageTitle">Curriculum Resource Directory</h1>
+  </div>
+  <div class="header-controls">
+    <div class="search-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="search" type="text" placeholder="Search all grades…" autocomplete="off">
+    </div>
+    <div class="lang-toggle" role="group" aria-label="Language">
+      <button id="btnEn" type="button" aria-pressed="true">EN</button>
+      <button id="btnFr" type="button" aria-pressed="false">FR</button>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <nav class="grade-rail" id="gradeRail" aria-label="Grade level"></nav>
+  <main id="content"></main>
+</div>
+
+<script>
+const curriculumData = [
+  {
+    id: "prek", grade: { en: "Pre-Kindergarten & Kindergarten", fr: "Maternelle" },
+    subjects: [
+      {
+        name: { en: "Arts Education", fr: "Éducation Artistique" },
+        topics: [
+          { title: { en: "Spring/Easter, Emotions, Music & Movement", fr: "Thèmes du Printemps, Émotions, et Musique" }, links: [ { name: "PBS Parents", url: "https://www.pbs.org/parents" }, { name: "Art for Kids Hub", url: "https://www.artforkidshub.com/" }, { name: "Cosmic Kids Yoga", url: "https://cosmickids.com/" }, { name: "TFO Éducation", url: "https://www.tfo.org/" } ] }
+        ]
+      },
+      {
+        name: { en: "Applied Skills & Career Ed", fr: "Compétences Pratiques et Éducation à la carrière" },
+        topics: [
+          { title: { en: "Cooking Utensils, Collaboration & Work Habits", fr: "Ustensiles de cuisine, Collaboration et Habitudes" }, links: [ { name: "PBS Kids Games", url: "https://pbskids.org/games/" }, { name: "Educatout", url: "https://www.educatout.com/" } ] }
+        ]
+      },
+      {
+        name: { en: "French Language Arts", fr: "Français Langue Première et Seconde" },
+        topics: [
+          { title: { en: "Spring Books, Letter Sounds & Complex Words", fr: "Le printemps, Sons des lettres et Lecture" }, links: [ { name: "Boukili (Livres FR)", url: "https://boukili.ca/fr" }, { name: "Il était une histoire", url: "https://www.iletaitunehistoire.com/" }, { name: "Lalilo (Lecture FR)", url: "https://lalilo.com/" } ] }
+        ]
+      },
+      {
+        name: { en: "English Language Arts", fr: "Anglais Langue Première et Seconde" },
+        topics: [
+          { title: { en: "Spring Themes, Letters Q–V, Jolly Phonics 2-3", fr: "Thème du printemps, Lettres Q-V, Jolly Phonics" }, links: [ { name: "Jolly Phonics Resource Bank", url: "https://www.jollylearning.co.uk/resource-bank/" }, { name: "Starfall Phonics", url: "https://www.starfall.com/" }, { name: "Reading Rockets", url: "https://www.readingrockets.org/" } ] }
+        ]
+      },
+      {
+        name: { en: "Mathematics", fr: "Mathématiques" },
+        topics: [
+          { title: { en: "Probability & Discovery of Graphs", fr: "Probabilité et Graphiques concrets" }, links: [ { name: "Math Is Fun: Data", url: "https://www.mathsisfun.com/data/" }, { name: "IXL Math", url: "https://www.ixl.com/math" }, { name: "Topmarks: Early Math", url: "https://www.topmarks.co.uk/maths-games/early-years" } ] }
+        ]
+      },
+      {
+        name: { en: "Physical & Health Education", fr: "Éducation physique et santé" },
+        topics: [
+          { title: { en: "Motor Skills (Jumping, Rolling) & Relays", fr: "Motricité de base et Relais simples" }, links: [ { name: "Active for Life", url: "https://activeforlife.com/" } ] }
+        ]
+      },
+      {
+        name: { en: "Science & Social Studies", fr: "Sciences et Sciences Humaines" },
+        topics: [
+          { title: { en: "Seasonal Change, Hibernation & Local Community", fr: "Saisons, Hibernation et Communauté locale" }, links: [ { name: "PBS LearningMedia", url: "https://www.pbslearningmedia.org/" }, { name: "NatGeo Kids", url: "https://kids.nationalgeographic.com/" }, { name: "Espace pour la vie", url: "https://espacepourlavie.ca/" } ] }
+        ]
+      }
+    ]
+  },
+  {
+    id: "g1-2", grade: { en: "Grades 1 - 2", fr: "1e - 2e année" },
+    subjects: [
+      {
+        name: { en: "Arts & Applied Skills", fr: "Éducation Artistique et Compétences pratiques" },
+        topics: [
+          { title: { en: "Drawing Lines, Singing Games & Community Art", fr: "Dessiner, Jeux chantés et Création communautaire" }, links: [ { name: "Deep Space Sparkle", url: "https://www.deepspacesparkle.com/" }, { name: "Art for Kids Hub", url: "https://www.artforkidshub.com/" } ] }
+        ]
+      },
+      {
+        name: { en: "English Language Arts", fr: "Langue et littérature anglaises" },
+        topics: [
+          { title: { en: "Personal Writing, Reading & Oral Strategies", fr: "Écriture personnelle, Stratégies de lecture et oral" }, links: [ { name: "ReadWriteThink", url: "https://www.readwritethink.org/" }, { name: "Storyline Online", url: "https://storylineonline.net/" }, { name: "Epic! Books", url: "https://www.getepic.com/" } ] }
+        ]
+      },
+      {
+        name: { en: "French Language (FR & FLE)", fr: "Français (FR et FLE)" },
+        topics: [
+          { title: { en: "Alphabet, Everyday Vocab, Reading & Fairy Tales", fr: "Alphabet, Vocabulaire, Lecture et Contes" }, links: [ { name: "Alloprof: Primaire", url: "https://www.alloprof.qc.ca/fr/eleves/bv/francais" }, { name: "Il était une histoire", url: "https://www.iletaitunehistoire.com/" }, { name: "TV5Monde: Jeunesse", url: "https://apprendre.tv5monde.com/fr/jeunesse" } ] }
+        ]
+      },
+      {
+        name: { en: "Mathematics", fr: "Mathématiques" },
+        topics: [
+          { title: { en: "2D/3D Geometry & Non-Standard/Metric Measurement", fr: "Géométrie 2D/3D et Mesure" }, links: [ { name: "Mathigon: Polypad", url: "https://mathigon.org/polypad" }, { name: "Math Playground", url: "https://www.mathplayground.com/" }, { name: "Toy Theater Math Tools", url: "https://toytheater.com/category/teacher-tools/virtual-manipulatives/" } ] }
+        ]
+      },
+      {
+        name: { en: "Physical & Health Education", fr: "Éducation physique et santé" },
+        topics: [
+          { title: { en: "Motor Skills, Health Practices, Mini-Basket/Tennis", fr: "Motricité, Santé, Mini-Basket et Tennis" }, links: [ { name: "PHE Canada", url: "https://phecanada.ca/" } ] }
+        ]
+      },
+      {
+        name: { en: "Science & Social Studies", fr: "Sciences et Sciences Humaines" },
+        topics: [
+          { title: { en: "Living/Non-Living, Weather, Communities & Seasons", fr: "Vivant, Météo, Communautés et Saisons" }, links: [ { name: "Idéllo (Cross-Curricular FR)", url: "https://www.idello.org/fr" }, { name: "BrainPOP Jr.", url: "https://jr.brainpop.com/" }, { name: "Scholastic Teachers", url: "https://www.scholastic.com/teachers/" } ] }
+        ]
+      }
+    ]
+  },
+  {
+    id: "g3-4", grade: { en: "Grades 3 - 4", fr: "3e - 4e année" },
+    subjects: [
+      {
+        name: { en: "Arts & Applied Skills", fr: "Éducation Artistique et Compétences pratiques" },
+        topics: [
+          { title: { en: "Design, Landscapes, Transformations & Steady Beat", fr: "Conception, Paysages, Transformation et Pulsation" }, links: [ { name: "Tinkercad", url: "https://www.tinkercad.com/" }, { name: "Chrome Music Lab", url: "https://musiclab.chromeexperiments.com/" } ] }
+        ]
+      },
+      {
+        name: { en: "English Language Arts", fr: "Langue et littérature anglaises" },
+        topics: [
+          { title: { en: "Persuasive Text, Sentence Structure & Wimpy Kid", fr: "Texte d’opinion, Structure et Journal d'un dégonflé" }, links: [ { name: "Wimpy Kid Official", url: "https://wimpykid.com" }, { name: "TeacherVision", url: "https://www.teachervision.com" } ] }
+        ]
+      },
+      {
+        name: { en: "French Language (FR & FLE)", fr: "Français (FR et FLE)" },
+        topics: [
+          { title: { en: "Future Tense, Food Vocabulary & Lifestyle Habits", fr: "Futur, Vocabulaire alimentaire et Habitudes de vie" }, links: [ { name: "Alloprof: Français", url: "https://www.alloprof.qc.ca/fr/eleves/bv/francais" }, { name: "Idéllo", url: "https://www.idello.org/fr" }, { name: "1jour1actu", url: "https://www.1jour1actu.com/" } ] }
+        ]
+      },
+      {
+        name: { en: "Mathematics", fr: "Mathématiques" },
+        topics: [
+          { title: { en: "Regular Polygons, Perimeter & Division", fr: "Polygones réguliers, Périmètre et Division" }, links: [ { name: "Khan Academy Math", url: "https://www.khanacademy.org/math" }, { name: "Prodigy Math", url: "https://www.prodigygame.com/" }, { name: "BBC Bitesize: Primary", url: "https://www.bbc.co.uk/bitesize/primary" } ] }
+        ]
+      },
+      {
+        name: { en: "Physical & Health Education", fr: "Éducation physique et santé" },
+        topics: [
+          { title: { en: "Soccer (Cooperating) & Basketball (Getting Open)", fr: "Football et Basketball" }, links: [ { name: "Active for Life", url: "https://activeforlife.com/" } ] }
+        ]
+      },
+      {
+        name: { en: "Science", fr: "Sciences" },
+        topics: [
+          { title: { en: "Thermal Energy (Conduction & Convection)", fr: "Énergie thermique (Conduction et Convection)" }, links: [ { name: "Alloprof (Sciences)", url: "https://www.alloprof.qc.ca/fr/eleves/bv/sciences" }, { name: "PhET Simulations", url: "https://phet.colorado.edu/" }, { name: "Parlons Sciences", url: "https://parlonssciences.ca/" } ] }
+        ]
+      },
+      {
+        name: { en: "Social Studies & Career Ed", fr: "Sciences Humaines et Éducation à la carrière" },
+        topics: [
+          { title: { en: "Levels of Government, BC Gov, Jobs & Roles", fr: "Niveaux de gouvernement, C.B., Emplois et Rôles" }, links: [ { name: "Student Vote Canada (CIVIX)", url: "https://studentvote.ca/" }, { name: "Canadian Encyclopedia", url: "https://www.thecanadianencyclopedia.ca/" }, { name: "Discover Canada", url: "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html" } ] }
+        ]
+      }
+    ]
+  },
+  {
+    id: "g5-6", grade: { en: "Grades 5 - 6", fr: "5e - 6e année" },
+    subjects: [
+      {
+        name: { en: "Arts & Applied Skills", fr: "Éducation Artistique et Compétences pratiques" },
+        topics: [
+          { title: { en: "Typing, Spring Crafts, Impressionism & Songs", fr: "Saisie, Bricolages, Impressionnisme et Chansons" }, links: [ { name: "TypingClub", url: "https://www.typingclub.com/" }, { name: "Nitro Type", url: "https://www.nitrotype.com/" }, { name: "Lumni: Primaire", url: "https://www.lumni.fr/" } ] }
+        ]
+      },
+      {
+        name: { en: "English Language Arts", fr: "Langue et littérature anglaises" },
+        topics: [
+          { title: { en: "Literary Devices, Sensory Imagery & Descriptive Writing", fr: "Procédés littéraires, Imagerie et Écriture" }, links: [ { name: "Flocabulary", url: "https://www.flocabulary.com/" }, { name: "Grammarly", url: "https://www.grammarly.com/" }, { name: "CommonLit", url: "https://www.commonlit.org/" } ] }
+        ]
+      },
+      {
+        name: { en: "French Language (FR & FLE)", fr: "Français (FR et FLE)" },
+        topics: [
+          { title: { en: "L’imparfait, COD/COI, Passé composé & Grammar", fr: "Imparfait, COD/COI, Passé composé et Grammaire" }, links: [ { name: "Alloprof: Grammaire", url: "https://www.alloprof.qc.ca/fr/eleves/bv/francais" }, { name: "Le Point du FLE", url: "https://www.lepointdufle.net/" }, { name: "Le français facile avec RFI", url: "https://francaisfacile.rfi.fr/fr/" } ] }
+        ]
+      },
+      {
+        name: { en: "Mathematics", fr: "Mathématiques" },
+        topics: [
+          { title: { en: "Time, 3D Capacity, Prisms, Triangles & Transformations", fr: "Temps, Capacité 3D, Prismes, Triangles et Transfo." }, links: [ { name: "Netmath (Bilingual)", url: "https://netmath.ca/" }, { name: "Khan Academy (Français)", url: "https://fr.khanacademy.org/math" }, { name: "GeoGebra 3D", url: "https://www.geogebra.org/3d" } ] }
+        ]
+      },
+      {
+        name: { en: "Physical & Health Education", fr: "Éducation physique et santé" },
+        topics: [
+          { title: { en: "Handball, Basketball & Team Strategies", fr: "Handball, Basketball et Stratégies d'équipe" }, links: [ { name: "PHE Canada", url: "https://phecanada.ca/" } ] }
+        ]
+      },
+      {
+        name: { en: "Science", fr: "Sciences" },
+        topics: [
+          { title: { en: "Rock Cycle, Universe, Simple Machines & Newton's Laws", fr: "Cycle des roches, Univers, Machines et Lois de Newton" }, links: [ { name: "NASA Space Place", url: "https://spaceplace.nasa.gov/" }, { name: "Physics Classroom", url: "https://www.physicsclassroom.com/" }, { name: "Alloprof: Sciences", url: "https://www.alloprof.qc.ca/fr/eleves/bv/sciences" } ] }
+        ]
+      },
+      {
+        name: { en: "Social Studies & Career Ed", fr: "Sciences Humaines et Éducation à la carrière" },
+        topics: [
+          { title: { en: "Quality of Life, HDI, Migration & Unknown Careers", fr: "Qualité de vie, IDH, Migration et Carrières" }, links: [ { name: "Gapminder", url: "https://www.gapminder.org/" }, { name: "NatGeo Education", url: "https://education.nationalgeographic.org/" }, { name: "UNDP Human Development", url: "https://hdr.undp.org/" } ] }
+        ]
+      }
+    ]
+  },
+  {
+    id: "g7", grade: { en: "Grade 7", fr: "7e année" },
+    subjects: [
+      {
+        name: { en: "Arts, Applied Skills & Career Ed", fr: "Éducation Artistique, Compétences Pratiques et Carrière" },
+        topics: [
+          { title: { en: "Design Process, Digital Comm, Impressionism & Rhythms", fr: "Processus de design, Comm. Numérique, Rythmes" }, links: [ { name: "Edutopia", url: "https://www.edutopia.org/" }, { name: "MusicTheory.net", url: "https://www.musictheory.net/" } ] }
+        ]
+      },
+      {
+        name: { en: "English Language Arts", fr: "Langue et littérature anglaises" },
+        topics: [
+          { title: { en: "Media & Advertising Literacy", fr: "Littératie médiatique et publicitaire" }, links: [ { name: "MediaSmarts", url: "https://mediasmarts.ca/" }, { name: "Common Sense Education", url: "https://www.commonsense.org/education" } ] }
+        ]
+      },
+      {
+        name: { en: "French Language (FR & FLE)", fr: "Français (FR et FLE)" },
+        topics: [
+          { title: { en: "Le Petit Prince, Passé Composé & Communication", fr: "Le Petit Prince, Passé Composé et Communication" }, links: [ { name: "MAJ (Radio-Canada Jeunesse)", url: "https://ici.radio-canada.ca/jeunesse/maj" }, { name: "Le Point du FLE", url: "https://www.lepointdufle.net/" } ] }
+        ]
+      },
+      {
+        name: { en: "Mathematics", fr: "Mathématiques" },
+        topics: [
+          { title: { en: "Area/Volume, Transformations, Graphs & Probability", fr: "Aire/Volume, Transformations, Graphes et Probabilités" }, links: [ { name: "Alloprof (Math)", url: "https://www.alloprof.qc.ca/fr/eleves/bv/mathematiques" }, { name: "Netmath", url: "https://www.netmath.ca/fr-qc/" }, { name: "CEMC Courseware", url: "https://www.cemc.uwaterloo.ca/resources/courseware/courseware.html" } ] }
+        ]
+      },
+      {
+        name: { en: "Physical & Health Education", fr: "Éducation physique et santé" },
+        topics: [
+          { title: { en: "Multisport Tournaments, Strategy, Leadership & Roles", fr: "Tournois multisports, Stratégie et Leadership" }, links: [ { name: "PHE Canada", url: "https://phecanada.ca/" } ] }
+        ]
+      },
+      {
+        name: { en: "Science", fr: "Sciences" },
+        topics: [
+          { title: { en: "Climate vs Weather, Greenhouse Effect & Footprint", fr: "Climat vs Météo, Gaz à effet de serre et Empreinte" }, links: [ { name: "NASA Climate Kids", url: "https://climatekids.nasa.gov/" }, { name: "Bozeman Science", url: "https://www.bozemanscience.com/" } ] }
+        ]
+      },
+      {
+        name: { en: "Social Studies", fr: "Sciences Humaines" },
+        topics: [
+          { title: { en: "Ancient Conflicts, Diplomacy, Migration & Empires", fr: "Conflits anciens, Diplomatie, Migration et Empires" }, links: [ { name: "World History Encyclopedia", url: "https://www.worldhistory.org/" }, { name: "Lumni", url: "https://www.lumni.fr/" } ] }
+        ]
+      }
+    ]
+  },
+  {
+    id: "g8", grade: { en: "Grade 8", fr: "8e année" },
+    subjects: [
+      {
+        name: { en: "Arts, Applied Skills & Career Ed", fr: "Éducation Artistique, Compétences Pratiques et Carrière" },
+        topics: [
+          { title: { en: "Computational Thinking, Music Elements & Career Paths", fr: "Pensée informatique, Musique et Parcours de carrière" }, links: [ { name: "Code.org", url: "https://code.org" }, { name: "MyBlueprint", url: "https://myblueprint.ca/" } ] }
+        ]
+      },
+      {
+        name: { en: "English Language Arts", fr: "Langue et littérature anglaises" },
+        topics: [
+          { title: { en: "To Kill A Mockingbird & Literary Analysis", fr: "To Kill A Mockingbird et Analyse littéraire" }, links: [ { name: "Facing History", url: "https://www.facinghistory.org/" }, { name: "CommonLit Library", url: "https://www.commonlit.org/" } ] }
+        ]
+      },
+      {
+        name: { en: "French Language (FR & FLE)", fr: "Français (FR et FLE)" },
+        topics: [
+          { title: { en: "FR: Chinese Myths & Legends", fr: "FR : Mythes et légendes chinois" }, links: [ { name: "Il était une histoire", url: "https://www.iletaitunehistoire.com/" }, { name: "Lumni", url: "https://www.lumni.fr/" } ] },
+          { title: { en: "FLE: Everyday French & Paris Trip", fr: "FLE : Français quotidien et Voyage à Paris" }, links: [ { name: "TV5Monde: Apprendre", url: "https://apprendre.tv5monde.com/fr" }, { name: "Le Point du FLE", url: "https://www.lepointdufle.net/" } ] }
+        ]
+      },
+      {
+        name: { en: "Mathematics", fr: "Mathématiques" },
+        topics: [
+          { title: { en: "3D/2D Shapes, Area, Perimeter, Surface Area & Volume", fr: "Formes 3D/2D, Aire, Périmètre et Volume" }, links: [ { name: "Desmos Activities", url: "https://teacher.desmos.com/" }, { name: "Khan Academy Math", url: "https://fr.khanacademy.org/math" } ] }
+        ]
+      },
+      {
+        name: { en: "Physical & Health Education", fr: "Éducation physique et santé" },
+        topics: [
+          { title: { en: "Multisport Tournaments, Roles: Captain, Referee, Coach", fr: "Tournois multisports et Rôles sportifs" }, links: [ { name: "PHE Canada", url: "https://phecanada.ca/" } ] }
+        ]
+      },
+      {
+        name: { en: "Science", fr: "Sciences" },
+        topics: [
+          { title: { en: "Matter & Atomic Theory (From Particles to Quarks)", fr: "La matière et la théorie atomique (Quarks)" }, links: [ { name: "PhET Simulations", url: "https://phet.colorado.edu/" }, { name: "CERN for Kids", url: "https://home.cern/science/physics" } ] }
+        ]
+      },
+      {
+        name: { en: "Social Studies", fr: "Sciences Humaines" },
+        topics: [
+          { title: { en: "Feudal Japan, Tokugawa Shogunate & Chinese Influence", fr: "Japon Féodal, Shogunat Tokugawa et Influence Chinoise" }, links: [ { name: "SHEG / Digital Inquiry Group", url: "https://inquirygroup.org/" }, { name: "Asia for Educators", url: "http://afe.easia.columbia.edu/" } ] }
+        ]
+      }
+    ]
+  },
+  {
+    id: "g9-10", grade: { en: "Grades 9 - 10", fr: "9e - 10e année" },
+    subjects: [
+      {
+        name: { en: "Media Design & Career Ed", fr: "Conception médiatique et Éducation à la carrière" },
+        topics: [
+          { title: { en: "Photography, Yearbook Design & Future Fields of Study", fr: "Photographie, Yearbook et Domaines d'études" }, links: [ { name: "Adobe Education", url: "https://www.adobe.com/education.html" }, { name: "MyBlueprint", url: "https://myblueprint.ca/" } ] }
+        ]
+      },
+      {
+        name: { en: "English Language Arts", fr: "Langue et littérature anglaises" },
+        topics: [
+          { title: { en: "Play Study: A Raisin in the Sun", fr: "A Raisin in the Sun et Analyse" }, links: [ { name: "Folger Shakespeare Library", url: "https://www.folger.edu/" }, { name: "CommonLit", url: "https://www.commonlit.org/" } ] }
+        ]
+      },
+      {
+        name: { en: "French Language (FR & FLE)", fr: "Français (FR et FLE)" },
+        topics: [
+          { title: { en: "FR: Greek Mythology & Odysseus", fr: "FR : Mythologie grecque et Ulysse" }, links: [ { name: "Lumni", url: "https://www.lumni.fr/" }, { name: "Odysseum (Eduscol)", url: "https://odysseum.eduscol.education.fr/" } ] },
+          { title: { en: "FLE: Teen Contexts & Digital Projects", fr: "FLE : Contextes ados et Projets" }, links: [ { name: "1jour1actu", url: "https://www.1jour1actu.com/" }, { name: "Le français facile avec RFI", url: "https://francaisfacile.rfi.fr/fr/" } ] }
+        ]
+      },
+      {
+        name: { en: "Mathematics", fr: "Mathématiques" },
+        topics: [
+          { title: { en: "Polynomials, Operations & Quadratic Equations", fr: "Polynômes, Opérations et Équations du second degré" }, links: [ { name: "Desmos Classroom Activities", url: "https://teacher.desmos.com/" }, { name: "Mathway Calculator", url: "https://www.mathway.com/" } ] }
+        ]
+      },
+      {
+        name: { en: "Physical & Health Education", fr: "Éducation physique et santé" },
+        topics: [
+          { title: { en: "Team Sports (Soccer/Basketball) & Acrosport", fr: "Sports collectifs et Initiation acrosport" }, links: [ { name: "PHE Canada", url: "https://phecanada.ca/" } ] }
+        ]
+      },
+      {
+        name: { en: "Science", fr: "Sciences" },
+        topics: [
+          { title: { en: "Elements, Compounds, Chemical Reactions & Mass", fr: "Éléments, Réactions chimiques et Masse" }, links: [ { name: "Alloprof (Sciences)", url: "https://www.alloprof.qc.ca/fr/eleves/bv/sciences" }, { name: "Chem LibreTexts", url: "https://chem.libretexts.org/" } ] }
+        ]
+      },
+      {
+        name: { en: "Social Studies & BC First Peoples", fr: "Sciences Humaines et Peuples Autochtones" },
+        topics: [
+          { title: { en: "First Peoples (Land/Culture) & European Contact Impacts", fr: "Premiers Peuples (Culture/Terre) et Contacts Européens" }, links: [ { name: "First Nations Education Steering Committee", url: "http://www.fnesc.ca/learningfirstpeoples/" }, { name: "Indigenous Peoples Atlas", url: "https://indigenouspeoplesatlasofcanada.ca/" } ] }
+        ]
+      }
+    ]
+  },
+  {
+    id: "g11", grade: { en: "Grade 11", fr: "11e année" },
+    subjects: [
+      {
+        name: { en: "Career Ed & Pre-Calculus", fr: "Éducation à la carrière et Pré-calcul" },
+        topics: [
+          { title: { en: "University Research, Simple/Compound Interest & Loans", fr: "Recherche Univ., Intérêts et Mathématiques Financières" }, links: [ { name: "Next Gen Personal Finance (NGPF)", url: "https://www.ngpf.org/" }, { name: "Desmos Calculator", url: "https://www.desmos.com/calculator" } ] }
+        ]
+      },
+      {
+        name: { en: "English Language Arts", fr: "Langue et littérature anglaises" },
+        topics: [
+          { title: { en: "Journalism & Media Literacy", fr: "Journalisme et Littératie médiatique" }, links: [ { name: "News Literacy Project", url: "https://newslit.org/" }, { name: "CommonLit", url: "https://www.commonlit.org/" } ] }
+        ]
+      },
+      {
+        name: { en: "French Language (FR & FLE)", fr: "Français (FR et FLE)" },
+        topics: [
+          { title: { en: "FR: L’Assommoir & Naturalism", fr: "FR : L’Assommoir et le Naturalisme" }, links: [ { name: "Gallica / BnF - Émile Zola", url: "https://gallica.bnf.fr/html/und/litteratures/emile-zola?mode=desktop" }, { name: "Études Littéraires", url: "https://www.etudes-litteraires.com/" } ] },
+          { title: { en: "FLE: Advanced Writing & Portfolio", fr: "FLE : Écriture avancée et Portfolio" }, links: [ { name: "TV5Monde", url: "https://apprendre.tv5monde.com/fr" }, { name: "Bonjour de France", url: "https://www.bonjourdefrance.com/" } ] }
+        ]
+      },
+      {
+        name: { en: "Physical & Health Education", fr: "Éducation physique et santé" },
+        topics: [
+          { title: { en: "Tournaments (Football/Basketball), Fencing & Ping-Pong", fr: "Tournois, Arbitrage, Escrime et Ping-pong" }, links: [ { name: "PHE Canada", url: "https://phecanada.ca/" } ] }
+        ]
+      },
+      {
+        name: { en: "Science (Chemistry & Life Science)", fr: "Sciences (Chimie et Sciences de la vie)" },
+        topics: [
+          { title: { en: "Solubility, Intro to Organic Chemistry & Energy Trans.", fr: "Solubilité, Chimie organique et Transformations d'énergie" }, links: [ { name: "Chem LibreTexts", url: "https://chem.libretexts.org/" }, { name: "Master Organic Chemistry", url: "https://www.masterorganicchemistry.com/" } ] }
+        ]
+      },
+      {
+        name: { en: "Social Studies & World History", fr: "Sciences Humaines et Histoire Mondiale" },
+        topics: [
+          { title: { en: "BC First Peoples, Cold War, Decolonization & Ideologies", fr: "Premiers Peuples, Guerre Froide et Décolonisation" }, links: [ { name: "Canadian War Museum", url: "https://www.warmuseum.ca/" }, { name: "History.com", url: "https://www.history.com/" } ] }
+        ]
+      }
+    ]
+  },
+  {
+    id: "g12", grade: { en: "Grade 12", fr: "12e année" },
+    subjects: [
+      {
+        name: { en: "Calculus & Pre-Calculus", fr: "Calculus et Pré-calcul" },
+        topics: [
+          { title: { en: "Derivatives, Integration, Polynomials, Factoring & Zeros", fr: "Dérivées, Intégration, Polynômes et Factorisation" }, links: [ { name: "3Blue1Brown: Essence of Calculus", url: "https://www.3blue1brown.com/topics/calculus" }, { name: "Khan Academy Math", url: "https://fr.khanacademy.org/math" } ] }
+        ]
+      },
+      {
+        name: { en: "Career Life & Entrepreneurship", fr: "Éducation à la carrière et Entrepreneuriat" },
+        topics: [
+          { title: { en: "Employability, Global Trends, Nonprofits vs Businesses", fr: "Tendances, Employabilité, OBNL vs Entreprises" }, links: [ { name: "Business Development Bank of Canada (BDC)", url: "https://www.bdc.ca/" }, { name: "Futurpreneur Canada", url: "https://www.futurpreneur.ca/" } ] }
+        ]
+      },
+      {
+        name: { en: "English Language Arts", fr: "Langue et littérature anglaises" },
+        topics: [
+          { title: { en: "Conspiracy Theories & Of Mice and Men", fr: "Théories du complot et Littérature américaine" }, links: [ { name: "News Literacy Project (Checkology)", url: "https://newslit.org/educators/checkology/" }, { name: "CommonLit", url: "https://www.commonlit.org/" } ] }
+        ]
+      },
+      {
+        name: { en: "French Language (FR & FLE)", fr: "Français (FR et FLE)" },
+        topics: [
+          { title: { en: "FR: Madame Bovary & Realism", fr: "FR : Madame Bovary et le Réalisme" }, links: [ { name: "Lumni", url: "https://www.lumni.fr/" }, { name: "Études Littéraires", url: "https://www.etudes-litteraires.com/" } ] },
+          { title: { en: "FLE: Communication & Baccalauréat Prep", fr: "FLE : Communication et Préparation au Bac" }, links: [ { name: "Le Point du FLE", url: "https://www.lepointdufle.net/" }, { name: "Le français facile avec RFI", url: "https://francaisfacile.rfi.fr/fr/" } ] }
+        ]
+      },
+      {
+        name: { en: "Physical & Health Education", fr: "Éducation physique et santé" },
+        topics: [
+          { title: { en: "Physical Tests, Basic Skills & Mini-Tournaments", fr: "Tests physiques, Technique de base et Mini-tournois" }, links: [ { name: "PHE Canada", url: "https://phecanada.ca/" } ] }
+        ]
+      },
+      {
+        name: { en: "Science (Anatomy, Chemistry, Physics)", fr: "Sciences (Anatomie, Chimie, Physiques)" },
+        topics: [
+          { title: { en: "Feedback Loops, Organ Systems, Acids/Bases & Circuits", fr: "Boucles de feedback, Organes, Acides/Bases et Circuits" }, links: [ { name: "PhET Simulations", url: "https://phet.colorado.edu/" }, { name: "Bozeman Science", url: "https://www.bozemanscience.com" }, { name: "Corpus (Canopé)", url: "https://www.reseau-canope.fr/corpus/" } ] }
+        ]
+      },
+      {
+        name: { en: "World History", fr: "Histoire Mondiale" },
+        topics: [
+          { title: { en: "Cold War, Korean War, Decolonization & Proxy Conflicts", fr: "Guerre Froide, Guerre de Corée et Décolonisation" }, links: [ { name: "History.com", url: "https://www.history.com/" }, { name: "Lumni", url: "https://www.lumni.fr/" } ] }
+        ]
+      }
+    ]
+  }
+];
+
+const STRINGS = {
+  en: {
+    eyebrow: "École Canadienne Internationale de Paris",
+    title: "Curriculum Resource Directory",
+    searchPlaceholder: "Search all grades…",
+    searchingAll: "Showing results for",
+    browsing: "Browsing",
+    emptyTitle: "No resources found",
+    emptyBody: q => `Nothing matched “${q}” across any grade. Try a different subject, topic, or resource name.`,
+    resultsIn: "in"
+  },
+  fr: {
+    eyebrow: "École Canadienne Internationale de Paris",
+    title: "Répertoire de ressources pédagogiques",
+    searchPlaceholder: "Rechercher dans tous les niveaux…",
+    searchingAll: "Résultats pour",
+    browsing: "Consultation :",
+    emptyTitle: "Aucune ressource trouvée",
+    emptyBody: q => `Rien ne correspond à « ${q} » dans aucun niveau. Essayez une autre matière, un autre thème ou un autre nom de ressource.`,
+    resultsIn: "—"
+  }
+};
+
+let lang = "en";
+let activeGrade = curriculumData[0].id;
+let query = "";
+
+try {
+  const savedLang = window.localStorage.getItem("eci-curriculum-lang");
+  if (savedLang === "en" || savedLang === "fr") lang = savedLang;
+  const savedGrade = window.localStorage.getItem("eci-curriculum-grade");
+  if (savedGrade && curriculumData.some(g => g.id === savedGrade)) activeGrade = savedGrade;
+} catch (e) { /* storage unavailable — defaults stand */ }
+
+const gradeRail = document.getElementById("gradeRail");
+const content = document.getElementById("content");
+const searchInput = document.getElementById("search");
+const btnEn = document.getElementById("btnEn");
+const btnFr = document.getElementById("btnFr");
+
+function persist(key, value){
+  try { window.localStorage.setItem(key, value); } catch (e) { /* ignore */ }
+}
+
+function norm(s){
+  return (s || "").toLowerCase();
+}
+
+function buildRail(){
+  gradeRail.innerHTML = "";
+  curriculumData.forEach(g => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.textContent = g.grade[lang];
+    btn.setAttribute("aria-current", g.id === activeGrade ? "true" : "false");
+    btn.addEventListener("click", () => {
+      activeGrade = g.id;
+      persist("eci-curriculum-grade", activeGrade);
+      searchInput.value = "";
+      query = "";
+      render();
+    });
+    gradeRail.appendChild(btn);
+  });
+}
+
+function linkChip(link){
+  const a = document.createElement("a");
+  a.href = link.url;
+  a.target = "_blank";
+  a.rel = "noopener noreferrer";
+  a.textContent = link.name;
+  return a;
+}
+
+function topicBlock(topic){
+  const art = document.createElement("article");
+  art.className = "topic";
+  const p = document.createElement("p");
+  p.className = "topic-title";
+  p.textContent = topic.title[lang];
+  art.appendChild(p);
+  const ul = document.createElement("ul");
+  ul.className = "link-list";
+  topic.links.forEach(l => {
+    const li = document.createElement("li");
+    li.appendChild(linkChip(l));
+    ul.appendChild(li);
+  });
+  art.appendChild(ul);
+  return art;
+}
+
+function subjectMatches(subject, q){
+  if (norm(subject.name[lang]).includes(q) || norm(subject.name.en).includes(q) || norm(subject.name.fr).includes(q)) return true;
+  return subject.topics.some(t => topicMatches(t, q));
+}
+
+function topicMatches(topic, q){
+  if (norm(topic.title[lang]).includes(q) || norm(topic.title.en).includes(q) || norm(topic.title.fr).includes(q)) return true;
+  return topic.links.some(l => norm(l.name).includes(q));
+}
+
+function filteredTopic(topic, q){
+  if (!q) return topic;
+  if (norm(topic.title[lang]).includes(q) || norm(topic.title.en).includes(q) || norm(topic.title.fr).includes(q)) return topic;
+  const links = topic.links.filter(l => norm(l.name).includes(q));
+  if (links.length) return { ...topic, links };
+  return null;
+}
+
+function renderBrowse(){
+  const g = curriculumData.find(x => x.id === activeGrade);
+  const s = STRINGS[lang];
+
+  const modeLabel = document.createElement("p");
+  modeLabel.className = "mode-label";
+  modeLabel.innerHTML = "";
+  const modeText = document.createElement("span");
+  modeText.textContent = s.browsing + " ";
+  const modeBold = document.createElement("b");
+  modeBold.textContent = g.grade[lang];
+  modeLabel.appendChild(modeText);
+  modeLabel.appendChild(modeBold);
+  content.appendChild(modeLabel);
+
+  g.subjects.forEach(subject => {
+    const section = document.createElement("section");
+    section.className = "subject";
+    const h3 = document.createElement("h3");
+    h3.className = "subject-name";
+    h3.textContent = subject.name[lang];
+    section.appendChild(h3);
+    subject.topics.forEach(topic => section.appendChild(topicBlock(topic)));
+    content.appendChild(section);
+  });
+}
+
+function renderSearch(q){
+  const s = STRINGS[lang];
+  const nq = norm(q);
+
+  const modeLabel = document.createElement("p");
+  modeLabel.className = "mode-label";
+  const modeText = document.createElement("span");
+  modeText.textContent = s.searchingAll + " ";
+  const modeBold = document.createElement("b");
+  modeBold.textContent = `“${q}”`;
+  modeLabel.appendChild(modeText);
+  modeLabel.appendChild(modeBold);
+  content.appendChild(modeLabel);
+
+  let anyResults = false;
+
+  curriculumData.forEach(g => {
+    const matchingSubjects = g.subjects
+      .map(subject => {
+        const matchedTopics = subject.topics
+          .map(t => filteredTopic(t, nq))
+          .filter(Boolean);
+        const nameMatches = norm(subject.name[lang]).includes(nq) || norm(subject.name.en).includes(nq) || norm(subject.name.fr).includes(nq);
+        if (matchedTopics.length === 0 && !nameMatches) return null;
+        return { ...subject, topics: nameMatches && matchedTopics.length === 0 ? subject.topics : matchedTopics };
+      })
+      .filter(Boolean);
+
+    if (matchingSubjects.length === 0) return;
+    anyResults = true;
+
+    const section = document.createElement("section");
+    section.className = "subject";
+    matchingSubjects.forEach(subject => {
+      const h3 = document.createElement("h3");
+      h3.className = "subject-name";
+      h3.textContent = subject.name[lang];
+      const tag = document.createElement("span");
+      tag.className = "grade-tag";
+      tag.textContent = "· " + g.grade[lang];
+      h3.appendChild(tag);
+      section.appendChild(h3);
+      subject.topics.forEach(topic => section.appendChild(topicBlock(topic)));
+    });
+    content.appendChild(section);
+  });
+
+  if (!anyResults){
+    const empty = document.createElement("div");
+    empty.className = "empty-state";
+    const b = document.createElement("b");
+    b.textContent = s.emptyTitle;
+    const body = document.createElement("p");
+    body.textContent = s.emptyBody(q);
+    empty.appendChild(b);
+    empty.appendChild(document.createElement("br"));
+    empty.appendChild(body);
+    content.appendChild(empty);
+  }
+}
+
+function render(){
+  document.getElementById("eyebrow").textContent = STRINGS[lang].eyebrow;
+  document.getElementById("pageTitle").textContent = STRINGS[lang].title;
+  document.title = STRINGS[lang].title + " — ECI";
+  searchInput.placeholder = STRINGS[lang].searchPlaceholder;
+  document.documentElement.lang = lang;
+
+  buildRail();
+  content.innerHTML = "";
+  if (query.trim().length > 0){
+    renderSearch(query.trim());
+  } else {
+    renderBrowse();
+  }
+}
+
+searchInput.addEventListener("input", (e) => {
+  query = e.target.value;
+  render();
+});
+
+btnEn.addEventListener("click", () => {
+  lang = "en";
+  persist("eci-curriculum-lang", lang);
+  btnEn.setAttribute("aria-pressed", "true");
+  btnFr.setAttribute("aria-pressed", "false");
+  render();
+});
+btnFr.addEventListener("click", () => {
+  lang = "fr";
+  persist("eci-curriculum-lang", lang);
+  btnFr.setAttribute("aria-pressed", "true");
+  btnEn.setAttribute("aria-pressed", "false");
+  render();
+});
+if (lang === "fr"){
+  btnFr.setAttribute("aria-pressed", "true");
+  btnEn.setAttribute("aria-pressed", "false");
+}
+
+render();
+</script>
+</body>
+</html>
