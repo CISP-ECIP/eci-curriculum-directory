@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Global Goals | Objectifs mondiaux</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Libre+Franklin:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#262A2E; --red:#C8102E; --paper:#FBF8F3; --card:#FFFFFF; --line:#E6E0D6; --muted:#5E646B;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:"Libre Franklin",Calibri,Arial,sans-serif;font-size:16px;line-height:1.5}
+.wrap{max-width:1100px;margin:0 auto;padding:24px 16px 40px}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px;border-bottom:3px solid var(--red);padding-bottom:14px;margin-bottom:18px}
+h1{font-family:Fraunces,Cambria,serif;font-size:clamp(26px,4vw,38px);line-height:1.1;margin:0}
+.kicker{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--red);font-weight:600;margin:0 0 6px}
+.lang{display:flex;border:1px solid var(--ink);border-radius:999px;overflow:hidden}
+.lang button{border:0;background:transparent;padding:6px 14px;font:600 14px "Libre Franklin",sans-serif;cursor:pointer;color:var(--ink)}
+.lang button[aria-pressed="true"]{background:var(--ink);color:#fff}
+.intro{max-width:780px;color:var(--muted);margin:0 0 20px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.tile{position:relative;border:0;border-radius:8px;color:#fff;text-align:left;padding:12px 12px 14px;min-height:118px;cursor:pointer;font:inherit;display:flex;flex-direction:column;gap:6px;transition:transform .12s,box-shadow .12s}
+.tile:hover,.tile:focus-visible{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,.18);outline:none}
+.tile[aria-expanded="true"]{box-shadow:0 0 0 3px var(--paper),0 0 0 6px var(--ink)}
+.num{font-family:Fraunces,serif;font-size:30px;font-weight:700;line-height:1}
+.tname{font-weight:600;font-size:14px;line-height:1.25;text-transform:uppercase;letter-spacing:.02em}
+.star{position:absolute;top:10px;right:10px;font-size:11px;font-weight:600;background:rgba(255,255,255,.92);color:var(--ink);border-radius:999px;padding:2px 8px}
+.panel{grid-column:1/-1;background:var(--card);border:1px solid var(--line);border-left:8px solid var(--c);border-radius:8px;padding:18px 20px;margin:4px 0 8px}
+.panel h2{font-family:Fraunces,Cambria,serif;margin:0 0 4px;font-size:24px}
+.target{color:var(--muted);margin:0 0 14px}
+.btn{display:inline-block;background:var(--ink);color:#fff;text-decoration:none;font-weight:600;padding:9px 16px;border-radius:6px}
+.btn:hover{background:var(--red)}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+.box{background:var(--paper);border-radius:6px;padding:12px 14px}
+.box h3{margin:0 0 6px;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--red)}
+.box p{margin:0}
+.comp{margin:14px 0 0;font-size:14px;color:var(--muted)}
+.legend{margin:18px 0 0;font-size:14px;color:var(--muted)}
+footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-size:14px;color:var(--muted);display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between}
+footer a{color:var(--red)}
+@media (max-width:640px){.cols{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <p class="kicker" data-i18n="kicker"></p>
+      <h1 data-i18n="title"></h1>
+    </div>
+    <div class="lang" role="group" aria-label="Language / Langue">
+      <button type="button" data-lang="en">EN</button>
+      <button type="button" data-lang="fr">FR</button>
+    </div>
+  </header>
+  <p class="intro" data-i18n="intro"></p>
+  <div class="grid" id="grid"></div>
+  <p class="legend" data-i18n="legend"></p>
+  <footer>
+    <span data-i18n="teachers"></span>
+    <span><a href="https://sdgs.un.org/goals" target="_blank" rel="noopener" data-i18n="un"></a></span>
+  </footer>
+</div>
+
+<script>
+const OPAC = "https://library.ecb-cbs.ca/cgi-bin/koha/opac-search.pl?q=";
+
+const UI = {
+  en:{kicker:"Learning Commons",title:"The Global Goals in our Library",
+      intro:"In 2015, the United Nations set 17 Sustainable Development Goals (SDGs) for a fairer, healthier planet by 2030. Choose a goal to find related books in our library, in English and French. Goals marked ✦ also include classroom activity ideas linked to the BC Core Competencies.",
+      find:"Find books in our library",comp:"BC Core Competencies",k8:"Grades K–8 idea",hs:"Grades 9–12 idea",
+      legend:"✦ Classroom connection available",
+      teachers:"Teachers: planning an SDG unit? Ask Mr. Jack for a book selection or a library session.",
+      un:"Official UN Sustainable Development Goals ↗",star:"✦ Class"},
+  fr:{kicker:"Centre d'apprentissage",title:"Les objectifs mondiaux à la bibliothèque",
+      intro:"En 2015, les Nations Unies ont fixé 17 objectifs de développement durable (ODD) pour une planète plus juste et plus saine d'ici 2030. Choisissez un objectif pour trouver des livres liés dans notre bibliothèque, en français et en anglais. Les objectifs marqués ✦ proposent aussi des idées d'activités en classe, liées aux compétences essentielles de la C.-B.",
+      find:"Trouver des livres à la bibliothèque",comp:"Compétences essentielles (C.-B.)",k8:"Idée Maternelle à 8e",hs:"Idée 9e à 12e",
+      legend:"✦ Lien avec la classe disponible",
+      teachers:"Enseignants : vous préparez une unité sur les ODD ? Demandez à M. Jack une sélection de livres ou une séance à la bibliothèque.",
+      un:"Objectifs de développement durable de l'ONU ↗",star:"✦ Classe"}
+};
+
+const G = [
+ {n:1,c:"#E5243B",q:"poverty OR poor OR pauvreté OR pauvre",
+  en:["No Poverty","End poverty in all its forms everywhere."],
+  fr:["Pas de pauvreté","Éliminer la pauvreté sous toutes ses formes et partout dans le monde."]},
+ {n:2,c:"#DDA63A",q:"hunger OR food OR faim OR nourriture OR alimentation",
+  en:["Zero Hunger","End hunger, achieve food security and improved nutrition, and promote sustainable agriculture."],
+  fr:["Faim « zéro »","Éliminer la faim, assurer la sécurité alimentaire, améliorer la nutrition et promouvoir l'agriculture durable."]},
+ {n:3,c:"#4C9F38",q:"health OR santé OR body OR corps OR doctors OR médecin OR feelings OR émotions",
+  en:["Good Health and Well-Being","Ensure healthy lives and promote well-being for all at all ages."],
+  fr:["Bonne santé et bien-être","Permettre à tous de vivre en bonne santé et promouvoir le bien-être de tous à tout âge."]},
+ {n:4,c:"#C5192D",q:"school OR education OR école OR éducation",
+  en:["Quality Education","Ensure inclusive and equitable quality education and lifelong learning for all."],
+  fr:["Éducation de qualité","Assurer l'accès de tous à une éducation de qualité, sur un pied d'égalité, et promouvoir l'apprentissage tout au long de la vie."],
+  comp:"Thinking: Critical (Analyzing, Questioning) · Communication: Acquiring & Presenting Info · Personal & Social: Personal Awareness",
+  compFr:"Réflexion : critique (analyser, questionner) · Communication : acquérir et présenter l'information · Personnelle et sociale : conscience de soi",
+  k8:["Explore stories and books in French and English about access to education around the world; create posters advocating for learning opportunities for all.",
+      "Explorer des histoires et des livres en français et en anglais sur l'accès à l'éducation dans le monde ; créer des affiches pour défendre le droit d'apprendre pour tous."],
+  hs:["Research and debate solutions to educational disparities in different regions; develop a proposal for a peer-tutoring program within the school, with materials in both languages.",
+      "Rechercher et débattre des solutions aux inégalités scolaires selon les régions ; élaborer un projet de tutorat entre élèves à l'école, avec du matériel dans les deux langues."]},
+ {n:5,c:"#FF3A21",q:"women OR girls OR femmes OR filles",
+  en:["Gender Equality","Achieve gender equality and empower all women and girls."],
+  fr:["Égalité entre les sexes","Parvenir à l'égalité des sexes et autonomiser toutes les femmes et les filles."]},
+ {n:6,c:"#26BDE2",q:"water OR eau",
+  en:["Clean Water and Sanitation","Ensure availability and sustainable management of water and sanitation for all."],
+  fr:["Eau propre et assainissement","Garantir l'accès de tous à l'eau et à l'assainissement et assurer une gestion durable des ressources en eau."],
+  comp:"Thinking: Creative (Generating ideas) · Communication: Collaborating · Personal & Social: Social Awareness & Responsibility",
+  compFr:"Réflexion : créative (générer des idées) · Communication : collaborer · Personnelle et sociale : conscience et responsabilité sociales",
+  k8:["Learn about the water cycle and local water sources (French and English vocabulary); design a model water filter; take part in a school-wide water conservation challenge.",
+      "Découvrir le cycle de l'eau et les sources d'eau locales (vocabulaire en français et en anglais) ; concevoir un modèle de filtre à eau ; participer à un défi d'économie d'eau à l'échelle de l'école."],
+  hs:["Investigate local and global water challenges; design a water-saving device or a bilingual awareness campaign for the community; analyze case studies of successful water projects in francophone countries.",
+      "Étudier les enjeux de l'eau, au niveau local et mondial ; concevoir un dispositif d'économie d'eau ou une campagne de sensibilisation bilingue ; analyser des projets réussis dans des pays francophones."]},
+ {n:7,c:"#FCC30B",q:"energy OR énergie OR electricity OR électricité OR sun OR soleil OR wind OR vent",dark:true,
+  en:["Affordable and Clean Energy","Ensure access to affordable, reliable, sustainable and modern energy for all."],
+  fr:["Énergie propre et d'un coût abordable","Garantir l'accès de tous à des services énergétiques fiables, durables et modernes, à un coût abordable."]},
+ {n:8,c:"#A21942",q:"jobs OR careers OR money OR argent OR métiers OR business OR economics",
+  en:["Decent Work and Economic Growth","Promote sustained, inclusive economic growth, full employment and decent work for all."],
+  fr:["Travail décent et croissance économique","Promouvoir une croissance économique soutenue, partagée et durable, le plein emploi et un travail décent pour tous."]},
+ {n:9,c:"#FD6925",q:"inventions OR inventors OR technology OR technologie OR science OR robots OR machines",
+  en:["Industry, Innovation and Infrastructure","Build resilient infrastructure, promote sustainable industrialization and foster innovation."],
+  fr:["Industrie, innovation et infrastructure","Bâtir une infrastructure résiliente, promouvoir une industrialisation durable qui profite à tous et encourager l'innovation."]},
+ {n:10,c:"#DD1367",q:"diversity OR immigrants OR racism OR diversité OR immigration OR refugees OR réfugiés OR \"civil rights\" OR differences OR différence",
+  en:["Reduced Inequalities","Reduce inequality within and among countries."],
+  fr:["Inégalités réduites","Réduire les inégalités dans les pays et d'un pays à l'autre."],
+  comp:"Thinking: Critical (Analyzing, Reflecting) · Communication: Engaging with others · Personal & Social: Positive Personal & Cultural Identity",
+  compFr:"Réflexion : critique (analyser, réfléchir) · Communication : interagir avec les autres · Personnelle et sociale : identité personnelle et culturelle positive",
+  k8:["Read and discuss stories about diversity and inclusion from various cultures (French and English); create a class charter promoting respect and fairness.",
+      "Lire et discuter d'histoires sur la diversité et l'inclusion issues de diverses cultures (en français et en anglais) ; rédiger une charte de classe pour le respect et l'équité."],
+  hs:["Analyze data on inequalities (e.g. gender, income) in Canada and globally; organize a school forum or create a bilingual documentary exploring solutions to local inequalities.",
+      "Analyser des données sur les inégalités (genre, revenu, etc.) au Canada et dans le monde ; organiser un forum à l'école ou réaliser un documentaire bilingue sur des solutions locales."]},
+ {n:11,c:"#FD9D24",q:"city OR cities OR ville OR villes",
+  en:["Sustainable Cities and Communities","Make cities and human settlements inclusive, safe, resilient and sustainable."],
+  fr:["Villes et communautés durables","Faire en sorte que les villes et les établissements humains soient ouverts à tous, sûrs, résilients et durables."]},
+ {n:12,c:"#BF8B2E",q:"recycling OR waste OR recyclage OR déchets OR plastic OR plastique OR earth OR terre OR planet OR planète",
+  en:["Responsible Consumption and Production","Ensure sustainable consumption and production patterns."],
+  fr:["Consommation et production responsables","Établir des modes de consommation et de production durables."],
+  comp:"Thinking: Creative (Evaluating & Developing) · Communication: Focusing on intent · Personal & Social: Social Responsibility",
+  compFr:"Réflexion : créative (évaluer et développer) · Communication : préciser son intention · Personnelle et sociale : responsabilité sociale",
+  k8:["Conduct a classroom waste audit; learn about recycling and composting in French and English; create art from recycled materials.",
+      "Réaliser un audit des déchets de la classe ; découvrir le recyclage et le compostage en français et en anglais ; créer des œuvres à partir de matériaux recyclés."],
+  hs:["Research the life cycle of common products; develop a bilingual school-wide campaign to reduce waste and promote sustainable habits; propose a repair café or swap event.",
+      "Étudier le cycle de vie d'objets courants ; mener une campagne bilingue à l'échelle de l'école pour réduire les déchets ; proposer un repair café ou une bourse d'échange."]},
+ {n:13,c:"#3F7E44",q:"climate OR climat OR environment OR environnement OR weather",
+  en:["Climate Action","Take urgent action to combat climate change and its impacts."],
+  fr:["Mesures relatives à la lutte contre les changements climatiques","Prendre d'urgence des mesures pour lutter contre les changements climatiques et leurs répercussions."],
+  comp:"Thinking: Critical (Analyzing & Critiquing) · Communication: Acquiring & Presenting Info · Personal & Social: Social Awareness",
+  compFr:"Réflexion : critique (analyser et critiquer) · Communication : acquérir et présenter l'information · Personnelle et sociale : conscience sociale",
+  k8:["Study local weather patterns and signs of climate change; plant a tree or start a small class garden; create bilingual posters about protecting the environment.",
+      "Observer la météo locale et les signes du changement climatique ; planter un arbre ou créer un petit jardin de classe ; réaliser des affiches bilingues sur la protection de l'environnement."],
+  hs:["Debate climate change mitigation and adaptation strategies; analyze international climate agreements (e.g. the Paris Agreement) in French and English; develop a school climate action plan.",
+      "Débattre des stratégies d'atténuation et d'adaptation ; analyser des accords internationaux sur le climat (par ex. l'Accord de Paris) en français et en anglais ; élaborer un plan d'action climat pour l'école."]},
+ {n:14,c:"#0A97D9",q:"ocean OR sea OR océan OR mer",
+  en:["Life Below Water","Conserve and sustainably use the oceans, seas and marine resources."],
+  fr:["Vie aquatique","Conserver et exploiter de manière durable les océans, les mers et les ressources marines."]},
+ {n:15,c:"#56C02B",q:"animals OR forest OR nature OR animaux OR forêt",
+  en:["Life on Land","Protect, restore and promote sustainable use of land ecosystems, forests and biodiversity."],
+  fr:["Vie terrestre","Préserver et restaurer les écosystèmes terrestres, gérer durablement les forêts et mettre fin à l'appauvrissement de la biodiversité."]},
+ {n:16,c:"#00689D",q:"war OR peace OR justice OR guerre OR paix",
+  en:["Peace, Justice and Strong Institutions","Promote peaceful and inclusive societies, access to justice for all and accountable institutions."],
+  fr:["Paix, justice et institutions efficaces","Promouvoir des sociétés pacifiques et ouvertes à tous, assurer l'accès de tous à la justice et des institutions efficaces."],
+  comp:"Thinking: Reflective (Assessing) · Communication: Collaborating · Personal & Social: Social Awareness & Responsibility",
+  compFr:"Réflexion : réflexive (évaluer) · Communication : collaborer · Personnelle et sociale : conscience et responsabilité sociales",
+  k8:["Discuss fairness and rules in games and in the classroom (French and English); role-play conflict resolution scenarios; learn about children's rights.",
+      "Discuter de l'équité et des règles dans les jeux et en classe (en français et en anglais) ; jouer des scénarios de résolution de conflits ; découvrir les droits de l'enfant."],
+  hs:["Research different forms of governance and justice systems; organize a bilingual model UN or mock trial on a global justice issue; advocate for a cause related to peace or human rights.",
+      "Étudier différentes formes de gouvernance et de systèmes judiciaires ; organiser une simulation de l'ONU ou un procès fictif bilingue sur un enjeu de justice mondiale ; défendre une cause liée à la paix ou aux droits de la personne."]},
+ {n:17,c:"#19486A",q:"\"united nations\" OR \"nations unies\" OR cooperation OR friendship OR amitié",
+  en:["Partnerships for the Goals","Strengthen global partnerships to achieve the goals."],
+  fr:["Partenariats pour la réalisation des objectifs","Renforcer les partenariats mondiaux pour atteindre les objectifs."]}
+];
+
+let lang = (new URLSearchParams(location.search).get("lang")||"en").toLowerCase()==="fr"?"fr":"en";
+let open = null;
+const grid = document.getElementById("grid");
+
+function esc(s){return s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+
+function render(){
+  const t = UI[lang];
+  document.documentElement.lang = lang;
+  document.querySelectorAll("[data-i18n]").forEach(el=>el.textContent=t[el.dataset.i18n]);
+  document.querySelectorAll(".lang button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.lang===lang));
+  grid.innerHTML = "";
+  G.forEach(g=>{
+    const b = document.createElement("button");
+    b.type="button"; b.className="tile"; b.style.background=g.c;
+    if(g.dark) b.style.color="#2b2b2b";
+    b.setAttribute("aria-expanded",open===g.n);
+    b.innerHTML = `<span class="num">${g.n}</span><span class="tname">${esc(g[lang][0])}</span>${g.k8?`<span class="star">${t.star}</span>`:""}`;
+    b.onclick=()=>{open = open===g.n?null:g.n; render();};
+    grid.appendChild(b);
+    if(open===g.n){
+      const i = lang==="fr"?1:0;
+      const p = document.createElement("div");
+      p.className="panel"; p.id="panel"; p.style.setProperty("--c",g.c);
+      p.innerHTML = `<h2>${g.n}. ${esc(g[lang][0])}</h2><p class="target">${esc(g[lang][1])}</p>
+        <a class="btn" target="_parent" href="${OPAC+encodeURIComponent(g.q)}">${t.find} →</a>
+        ${g.k8?`<div class="cols"><div class="box"><h3>${t.k8}</h3><p>${esc(g.k8[i])}</p></div><div class="box"><h3>${t.hs}</h3><p>${esc(g.hs[i])}</p></div></div>
+        <p class="comp"><strong>${t.comp}:</strong> ${esc(lang==="fr"?g.compFr:g.comp)}</p>`:""}`;
+      grid.appendChild(p);
+    }
+  });
+}
+document.querySelectorAll(".lang button").forEach(b=>b.onclick=()=>{lang=b.dataset.lang;render();});
+function postHeight(){
+  if (window.parent !== window) {
+    window.parent.postMessage({source:"eci-sdg-library", height:document.documentElement.scrollHeight}, "*");
+  }
+}
+new ResizeObserver(postHeight).observe(document.body);
+window.addEventListener("load", postHeight);
+render();
+</script>
+</body>
+</html>
