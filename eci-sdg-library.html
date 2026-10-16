@@ -207,7 +207,7 @@ function render(){
 document.querySelectorAll(".lang button").forEach(b=>b.onclick=()=>{lang=b.dataset.lang;render();});
 function postHeight(){
   if (window.parent !== window) {
-    window.parent.postMessage({source:"eci-sdg-library", height:document.documentElement.scrollHeight}, "*");
+    window.parent.postMessage({source:"eci-sdg-library", height:Math.ceil(document.querySelector(".wrap").getBoundingClientRect().height)}, "*");
   }
 }
 new ResizeObserver(postHeight).observe(document.body);
